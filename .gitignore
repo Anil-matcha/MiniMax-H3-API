@@ -1,0 +1,9 @@
+secrets.py
+.env
+__pycache__/
+*.pyc
+popcorn_output/
+sequence_*/
+.DS_Store
+.vscode/
+.idea/
