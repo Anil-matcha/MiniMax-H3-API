@@ -4,7 +4,7 @@ Popcorn Storyboard Generator
 Inspired by Higgsfield Popcorn - Generate 4-8 consistent frames from text + reference images
 
 Usage:
-    python popcorn_storyboard.py --prompt "detective investigating a crime scene" --references char.png env.png --frames 6
+    python popcorn_storyboard.py --prompt "detective investigating a crime scene" --references https://example.com/char.png https://example.com/env.png --frames 6
 """
 
 import asyncio
@@ -165,10 +165,9 @@ logger = logging.getLogger(__name__)
 # ============================================================================
 
 async def ensure_url(image_path: str) -> str:
-    """Convert local file to URL if needed (placeholder - you'd implement upload)"""
-    if image_path.startswith("http"):
-        return image_path
-    # For now, assume it's already a URL or implement file upload
+    """Validate that the input is a URL."""
+    if not image_path.startswith(("http://", "https://")):
+        raise ValueError(f"Invalid reference: '{image_path}'. References must be image URLs (starting with http:// or https://). Local files are not supported.")
     return image_path
 
 
@@ -193,10 +192,10 @@ class VisionAdapter:
         image_url: str
     ) -> dict:
         """
-        Given an image URL or local file path, produce structured analysis.
+        Given an image URL, produce structured analysis.
         Returns a dict: { summary, tags, objects, colors, suggestions }
         """
-        # Ensure we have a URL (upload if local file)
+        # Ensure we have a URL
         image_url = await ensure_url(image_url)
 
         submit_url = f"{self.BASE_URL}/{self.MODEL}"

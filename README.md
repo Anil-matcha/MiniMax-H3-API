@@ -50,7 +50,7 @@ python popcorn_storyboard.py --manual_shots "wide shot of a spooky house" "close
 Upload reference images (e.g., your main character or a specific location) to guide the AI.
 
 ```bash
-python popcorn_storyboard.py --prompt "A knight fighting a dragon" --references knight_ref.png dragon_ref.png
+python popcorn_storyboard.py --prompt "A knight fighting a dragon" --references https://example.com/knight.png https://example.com/dragon.png
 ```
 
 ## Options
