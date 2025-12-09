@@ -3,7 +3,20 @@ secrets.py
 __pycache__/
 *.pyc
 popcorn_output/
+popcorn_output_simple/
+popcorn_output_free/
 sequence_*/
 .DS_Store
 .vscode/
 .idea/
+
+# Virtual environment
+venv/
+env/
+ENV/
+.venv/
+
+# Generated images
+*.png
+*.jpg
+*.jpeg

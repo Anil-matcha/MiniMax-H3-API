@@ -22,34 +22,48 @@ An open-source alternative to **Higgsfield Popcorn**, designed to generate consi
 ## Installation
 
 1.  Clone this repository.
-2.  Install dependencies:
+2.  Create virtual environment (recommended):
     ```bash
-    pip install requests python-dotenv pydantic aiohttp
+    python -m venv venv
+    source venv/bin/activate  # On Windows: venv\Scripts\activate
     ```
-3.  Configure your API keys:
-    *   Rename `secrets.py` or edit it directly.
-    *   Add your **MuAPI** key (`MUAPIAPP_API_KEY`). You can get one from [muapi.ai](https://muapi.ai).
+3.  Install dependencies:
+    ```bash
+    pip install pydantic aiohttp python-dotenv
+    ```
+4.  Configure API keys in `secrets.py`:
+    *   **Option A (FREE)**: Add `GROQ_API_KEY` from [console.groq.com](https://console.groq.com/keys)
+    *   **Option B (Paid)**: Add `MUAPIAPP_API_KEY` from [muapi.ai](https://muapi.ai)
 
 ## Usage
 
-### Auto Mode
-Generate a sequence from a single prompt. The AI will plan the shots for you.
+### FREE Version (Groq + Pollinations.AI)
+
+Generate storyboards using free APIs:
 
 ```bash
+# Auto mode - AI plans the shots
+python popcorn_free.py --prompt "A cyberpunk hacker breaking into a secure server room" --frames 6 --style "cyberpunk neon"
+
+# Manual mode - you control each shot
+python popcorn_free.py --manual_shots "wide shot of a spooky house" "close up of a hand opening the door" --style "horror"
+
+# With reference images
+python popcorn_free.py --prompt "A knight fighting a dragon" --references https://example.com/knight.png --frames 4
+```
+
+### Paid Version (MuAPI)
+
+For higher quality and faster generation:
+
+```bash
+# Auto mode
 python popcorn_storyboard.py --prompt "A cyberpunk hacker breaking into a secure server room" --frames 6 --style "cyberpunk neon"
-```
 
-### Manual Mode
-Define exactly what happens in each frame.
+# Manual mode
+python popcorn_storyboard.py --manual_shots "wide shot of a spooky house" "close up of a hand opening the door" --style "horror"
 
-```bash
-python popcorn_storyboard.py --manual_shots "wide shot of a spooky house" "close up of a hand opening the door" "interior view of a dusty hallway" --style "horror"
-```
-
-### Using References
-Upload reference images (e.g., your main character or a specific location) to guide the AI.
-
-```bash
+# With references
 python popcorn_storyboard.py --prompt "A knight fighting a dragon" --references https://example.com/knight.png https://example.com/dragon.png
 ```
 
@@ -61,6 +75,19 @@ python popcorn_storyboard.py --prompt "A knight fighting a dragon" --references 
 *   `--style`: Visual style of the sequence (Default: "cinematic realistic").
 *   `--references`: URLs or paths to reference images (Up to 4 recommended).
 *   `--output`: Directory to save the results.
+
+## Version Comparison
+
+| Feature | FREE (Groq + Pollinations) | Paid (MuAPI) |
+|---------|---------------------------|--------------|
+| Cost | FREE | $10+ |
+| AI Planning | ✅ Advanced (Groq Llama 3.3) | ✅ Advanced (GPT-5-mini) |
+| Image Generation | ✅ Good (Pollinations) | ✅ Excellent (nano-banana) |
+| Reference Images | ✅ Supported | ✅ Supported |
+| Vision Analysis | ⚠️ Text-based | ✅ Full vision |
+| Character Consistency | Good | Excellent |
+| Speed | ~60s/frame | ~3s/frame |
+| Setup | Get free Groq key | Requires payment |
 
 ## License
 
