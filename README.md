@@ -1,67 +1,127 @@
-# Open Higgsfield Popcorn 🍿
+# Midjourney ComfyUI Nodes
 
-An open-source alternative to **Higgsfield Popcorn**, designed to generate consistent, cinematic storyboards and visual sequences using AI.
+> **ComfyUI custom nodes for Midjourney V7, V8, and Niji** — generate high-quality Midjourney images directly inside ComfyUI via the [muapi.ai](https://muapi.ai) API.
 
-## What is Higgsfield Popcorn?
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![ComfyUI](https://img.shields.io/badge/ComfyUI-Custom%20Node-blue)](https://github.com/comfyanonymous/ComfyUI)
+[![Midjourney](https://img.shields.io/badge/Model-Midjourney%20V7%2FV8%2FNiji-ff69b4)](https://muapi.ai)
 
-[Higgsfield Popcorn](https://higgsfield.ai) is a powerful AI tool for creators that generates consistent character and environment sequences for storyboards, marketing campaigns, and visual storytelling. It solves a major pain point in AI image generation: **consistency**. It allows users to create 4-8 frames that look like they belong to the same movie or narrative, maintaining character identity and visual style across different shots and angles.
+---
 
-## About This Project
+## What's Inside
 
-**Open Higgsfield Popcorn** is an open-source implementation inspired by the original tool. It leverages the power of **MuAPI** (using models like `gpt-5-mini` and `nano-banana`) to achieve similar results: creating coherent, multi-frame visual stories from text prompts and reference images.
+This node pack exposes the three latest Midjourney endpoints on muapi.ai as ComfyUI nodes. Each run returns **4 images** as an `IMAGE` batch that plugs directly into previews, savers, upscalers, or any downstream node.
 
-### Key Features
+- **Midjourney V7** — photorealistic, artistic, cinematic compositions
+- **Midjourney V8** — latest generation, improved coherence and detail
+- **Midjourney Niji** — anime, manga, and stylized illustration
 
-*   **Consistent Storytelling**: Generates 2-12 frames that maintain visual consistency in style, characters, and lighting.
-*   **Auto Mode**: simply provide a prompt (e.g., "detective investigating a crime scene") and let the AI plan and generate the entire sequence.
-*   **Manual Mode**: Have full control by specifying the description for each shot individually.
-*   **Reference-Driven**: Use character and environment reference images to guide the generation and ensure identity consistency.
-*   **Cinematic Planning**: Uses an LLM "Director" to intelligently plan shot types (wide, close-up, etc.) and camera angles based on your narrative context.
-*   **Style Control**: Choose from various visual styles (Cinematic Realistic, Anime, Noir, etc.).
+All three share the same control surface: prompt, aspect ratio, stylize, chaos, weird, negative prompt, seed, and optional reference image.
+
+---
+
+## Nodes
+
+| Node | Description |
+|------|-------------|
+| 🔑 Midjourney API Key | Set your muapi key once — wire to all nodes |
+| 🎨 Midjourney V7 | 4-image run with V7 |
+| 🎨 Midjourney V8 | 4-image run with V8 |
+| 🎨 Midjourney Niji | 4-image run with Niji (anime / illustration) |
+
+---
 
 ## Installation
 
-1.  Clone this repository.
-2.  Install dependencies:
-    ```bash
-    pip install requests python-dotenv pydantic aiohttp
-    ```
-3.  Configure your API keys:
-    *   Rename `secrets.py` or edit it directly.
-    *   Add your **MuAPI** key (`MUAPIAPP_API_KEY`). You can get one from [muapi.ai](https://muapi.ai).
+### Via ComfyUI Manager (recommended)
+1. Open **ComfyUI Manager** → **Install via Git URL**
+2. Paste: `https://github.com/Anil-matcha/Open-Higgsfield-Popcorn`
+3. Restart ComfyUI
 
-## Usage
-
-### Auto Mode
-Generate a sequence from a single prompt. The AI will plan the shots for you.
-
+### Manual
 ```bash
-python popcorn_storyboard.py --prompt "A cyberpunk hacker breaking into a secure server room" --frames 6 --style "cyberpunk neon"
+cd ComfyUI/custom_nodes
+git clone https://github.com/Anil-matcha/Open-Higgsfield-Popcorn midjourney-comfyui
+pip install -r midjourney-comfyui/requirements.txt
 ```
 
-### Manual Mode
-Define exactly what happens in each frame.
+---
 
-```bash
-python popcorn_storyboard.py --manual_shots "wide shot of a spooky house" "close up of a hand opening the door" "interior view of a dusty hallway" --style "horror"
+## Quick Start
+
+1. Sign up at [muapi.ai](https://muapi.ai) and go to **Dashboard → API Keys → Create Key**.
+2. Right-click the ComfyUI canvas → **Add Node** → **🎨 Midjourney**.
+3. Add a **🔑 Midjourney API Key** node, paste your key, and wire its output to any generation node (or leave all `api_key` fields empty and run `muapi auth configure --api-key YOUR_KEY` once in a terminal).
+4. Type a prompt and hit **Queue Prompt** — 4 images come back as a batch.
+
+> **Tip:** The [MuAPI CLI](https://github.com/SamurAIGPT/muapi-cli) lets you configure your key once globally. All nodes in this pack auto-read `~/.muapi/config.json` when the `api_key` field is empty.
+
+---
+
+## Node Reference
+
+All three generation nodes share the same inputs:
+
+| Field | Values | Default |
+|-------|--------|---------|
+| `prompt` | Text description | — |
+| `aspect_ratio` | 1:1 / 16:9 / 9:16 / 3:4 / 4:3 / 21:9 | 1:1 |
+| `stylize` | 0–1000 (lower = literal, higher = stylized) | 100 |
+| `chaos` | 0–100 (variation across the 4 images) | 0 |
+| `weird` | 0–3000 (unconventional aesthetics) | 0 |
+| `negative_prompt` | Optional — things to exclude | — |
+| `seed` | 0–4294967295 (0 = random) | 0 |
+| `image_url` | Optional reference image URL | — |
+| `ref_image` | Optional `IMAGE` input — uploaded to muapi | — |
+| `api_key` | Optional — leave blank if using the API Key node or CLI config | — |
+
+**Outputs:** `images` (IMAGE batch of 4) · `first_url` (STRING) · `all_urls` (STRING, newline-separated) · `request_id` (STRING)
+
+### Reference images
+- If both `image_url` and `ref_image` are provided, `image_url` wins.
+- `ref_image` is uploaded to muapi's `/upload_file` endpoint before the generation call.
+
+---
+
+## Example Workflow
+
+```
+[🔑 API Key] ──────────────────┐
+                                ↓
+[🎨 Midjourney V8] → images → [Preview Image]
+                   → first_url → [Show Text]
 ```
 
-### Using References
-Upload reference images (e.g., your main character or a specific location) to guide the AI.
+The `images` output is a batch of 4, so dropping a standard **Preview Image** or **Save Image** node shows/saves all four frames.
 
-```bash
-python popcorn_storyboard.py --prompt "A knight fighting a dragon" --references https://example.com/knight.png https://example.com/dragon.png
-```
+---
 
-## Options
+## API
 
-*   `--prompt`: The main story or scene description (Required for Auto Mode).
-*   `--manual_shots`: List of descriptions for each frame (Enables Manual Mode).
-*   `--frames`: Number of frames to generate (Default: 6).
-*   `--style`: Visual style of the sequence (Default: "cinematic realistic").
-*   `--references`: URLs or paths to reference images (Up to 4 recommended).
-*   `--output`: Directory to save the results.
+This node pack uses the **muapi.ai** API under the hood:
+- **Submit:** `POST https://api.muapi.ai/api/v1/midjourney-v7` (or `-v8`, or `-niji`)
+- **Poll:** `GET https://api.muapi.ai/api/v1/predictions/{id}/result`
+- **Upload:** `POST https://api.muapi.ai/api/v1/upload_file`
+
+Authentication is a single `x-api-key` header — no session tokens required.
+
+---
+
+## Requirements
+
+- Python ≥ 3.8
+- `requests` ≥ 2.28 · `Pillow` ≥ 9.0 · `numpy` ≥ 1.23 · `torch` ≥ 2.0
+
+---
+
+## Want More Models?
+
+This repo is focused on Midjourney only. If you need access to **100+ models** — Seedance, Kling, Veo3, Flux, HiDream, GPT-image, Imagen4, Wan, lipsync, audio, image enhancement and more — check out the full MuAPI ComfyUI node pack:
+
+**[SamurAIGPT/muapi-comfyui](https://github.com/SamurAIGPT/muapi-comfyui)** — ComfyUI nodes for every muapi.ai model in one place.
+
+---
 
 ## License
 
-This project is open-source and available under the MIT License.
+MIT © 2026
