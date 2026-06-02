@@ -8,6 +8,11 @@
 
 ---
 
+## Related Projects
+
+- [muapi-comfyui](https://github.com/SamurAIGPT/muapi-comfyui) — ComfyUI nodes for 100+ MuAPI models including Midjourney, Seedance, Veo, and more
+- [Open-Generative-AI](https://github.com/Anil-matcha/Open-Generative-AI) — Free self-hosted studio with 200+ models — no ComfyUI needed
+
 ## What's Inside
 
 This node pack exposes the three latest Midjourney endpoints on muapi.ai as ComfyUI nodes. Each run returns **4 images** as an `IMAGE` batch that plugs directly into previews, savers, upscalers, or any downstream node.
