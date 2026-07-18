@@ -12,6 +12,7 @@
 
 - [muapi-comfyui](https://github.com/SamurAIGPT/muapi-comfyui) — ComfyUI nodes for 100+ MuAPI models including Midjourney, Seedance, Veo, and more
 - [Open-Generative-AI](https://github.com/Anil-matcha/Open-Generative-AI) — Free self-hosted studio with 200+ models — no ComfyUI needed
+- [awesome-ai-image-models](https://github.com/Anil-matcha/awesome-ai-image-models) — compare AI image models by API, price & quality
 
 ## What's Inside
 
