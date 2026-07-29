@@ -1,133 +1,104 @@
-# Midjourney ComfyUI Nodes
+# MiniMax H3 API: Python SDK for AI Video Generation
 
-> **ComfyUI custom nodes for Midjourney V7, V8, and Niji** — generate high-quality Midjourney images directly inside ComfyUI via the [muapi.ai](https://muapi.ai) API.
-
+[![Powered by MuAPI](https://img.shields.io/badge/Powered%20by-MuAPI-6366f1?style=flat-square)](https://muapi.ai/minimax-h3?utm_source=github&utm_medium=badge&utm_campaign=minimax-h3-api)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![ComfyUI](https://img.shields.io/badge/ComfyUI-Custom%20Node-blue)](https://github.com/comfyanonymous/ComfyUI)
-[![Midjourney](https://img.shields.io/badge/Model-Midjourney%20V7%2FV8%2FNiji-ff69b4)](https://muapi.ai)
+[![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/)
 
----
+Python SDK for the **MiniMax H3 API** on [Muapi](https://muapi.ai/minimax-h3?utm_source=github&utm_medium=readme&utm_campaign=minimax-h3-api). Generate video from text, animate a still image, or create a controlled transition between first and last frames with one API key.
 
 ## Related Projects
 
-- [muapi-comfyui](https://github.com/SamurAIGPT/muapi-comfyui) — ComfyUI nodes for 100+ MuAPI models including Midjourney, Seedance, Veo, and more
-- [Open-Generative-AI](https://github.com/Anil-matcha/Open-Generative-AI) — Free self-hosted studio with 200+ models — no ComfyUI needed
-- [awesome-ai-image-models](https://github.com/Anil-matcha/awesome-ai-image-models) — compare AI image models by API, price & quality
+- [Open-Generative-AI](https://github.com/Anil-matcha/Open-Generative-AI) — open-source studio and model hub for generative image and video workflows.
+- [awesome-ai-video-models](https://github.com/Anil-matcha/awesome-ai-video-models) — compare leading AI video models, API access, and pricing.
+- [Seedance-2-API](https://github.com/Anil-matcha/Seedance-2-API) — Python SDK for ByteDance Seedance text-to-video and image-to-video workflows.
+- [Veo-4-API](https://github.com/Anil-matcha/Veo-4-API) — Python SDK for Google Veo video-generation workflows.
+- [Flux-3-Dev-API](https://github.com/Anil-matcha/Flux-3-Dev-API) — unified image and video SDK for the FLUX 3 family.
+- [Generative-Media-Skills](https://github.com/SamurAIGPT/Generative-Media-Skills) — agent-ready skills for building generative-media pipelines.
+- [muapi-cli](https://github.com/SamurAIGPT/muapi-cli) — CLI and MCP access to Muapi generation tasks.
 
-## What's Inside
+## Features
 
-This node pack exposes the three latest Midjourney endpoints on muapi.ai as ComfyUI nodes. Each run returns **4 images** as an `IMAGE` batch that plugs directly into previews, savers, upscalers, or any downstream node.
-
-- **Midjourney V7** — photorealistic, artistic, cinematic compositions
-- **Midjourney V8** — latest generation, improved coherence and detail
-- **Midjourney Niji** — anime, manga, and stylized illustration
-
-All three share the same control surface: prompt, aspect ratio, stylize, chaos, weird, negative prompt, seed, and optional reference image.
-
----
-
-## Nodes
-
-| Node | Description |
-|------|-------------|
-| 🔑 Midjourney API Key | Set your muapi key once — wire to all nodes |
-| 🎨 Midjourney V7 | 4-image run with V7 |
-| 🎨 Midjourney V8 | 4-image run with V8 |
-| 🎨 Midjourney Niji | 4-image run with Niji (anime / illustration) |
-
----
+- Text-to-video generation
+- Image-to-video animation
+- First-and-last-frame video transitions
+- Submit, poll, and webhook-ready asynchronous workflow
+- Simple Python client built on `requests`
 
 ## Installation
 
-### Via ComfyUI Manager (recommended)
-1. Open **ComfyUI Manager** → **Install via Git URL**
-2. Paste: `https://github.com/Anil-matcha/Open-Higgsfield-Popcorn`
-3. Restart ComfyUI
-
-### Manual
 ```bash
-cd ComfyUI/custom_nodes
-git clone https://github.com/Anil-matcha/Open-Higgsfield-Popcorn midjourney-comfyui
-pip install -r midjourney-comfyui/requirements.txt
+pip install minimax-h3-api
 ```
 
----
+Or install from source:
 
-## Quick Start
-
-1. Sign up at [muapi.ai](https://muapi.ai) and go to **Dashboard → API Keys → Create Key**.
-2. Right-click the ComfyUI canvas → **Add Node** → **🎨 Midjourney**.
-3. Add a **🔑 Midjourney API Key** node, paste your key, and wire its output to any generation node (or leave all `api_key` fields empty and run `muapi auth configure --api-key YOUR_KEY` once in a terminal).
-4. Type a prompt and hit **Queue Prompt** — 4 images come back as a batch.
-
-> **Tip:** The [MuAPI CLI](https://github.com/SamurAIGPT/muapi-cli) lets you configure your key once globally. All nodes in this pack auto-read `~/.muapi/config.json` when the `api_key` field is empty.
-
----
-
-## Node Reference
-
-All three generation nodes share the same inputs:
-
-| Field | Values | Default |
-|-------|--------|---------|
-| `prompt` | Text description | — |
-| `aspect_ratio` | 1:1 / 16:9 / 9:16 / 3:4 / 4:3 / 21:9 | 1:1 |
-| `stylize` | 0–1000 (lower = literal, higher = stylized) | 100 |
-| `chaos` | 0–100 (variation across the 4 images) | 0 |
-| `weird` | 0–3000 (unconventional aesthetics) | 0 |
-| `negative_prompt` | Optional — things to exclude | — |
-| `seed` | 0–4294967295 (0 = random) | 0 |
-| `image_url` | Optional reference image URL | — |
-| `ref_image` | Optional `IMAGE` input — uploaded to muapi | — |
-| `api_key` | Optional — leave blank if using the API Key node or CLI config | — |
-
-**Outputs:** `images` (IMAGE batch of 4) · `first_url` (STRING) · `all_urls` (STRING, newline-separated) · `request_id` (STRING)
-
-### Reference images
-- If both `image_url` and `ref_image` are provided, `image_url` wins.
-- `ref_image` is uploaded to muapi's `/upload_file` endpoint before the generation call.
-
----
-
-## Example Workflow
-
-```
-[🔑 API Key] ──────────────────┐
-                                ↓
-[🎨 Midjourney V8] → images → [Preview Image]
-                   → first_url → [Show Text]
+```bash
+git clone https://github.com/Anil-matcha/MiniMax-H3-API.git
+cd MiniMax-H3-API
+pip install -e .
 ```
 
-The `images` output is a batch of 4, so dropping a standard **Preview Image** or **Save Image** node shows/saves all four frames.
+Set your Muapi API key:
 
----
+```bash
+export MUAPI_API_KEY=your_muapi_api_key
+```
 
-## API
+## Quick start
 
-This node pack uses the **muapi.ai** API under the hood:
-- **Submit:** `POST https://api.muapi.ai/api/v1/midjourney-v7` (or `-v8`, or `-niji`)
-- **Poll:** `GET https://api.muapi.ai/api/v1/predictions/{id}/result`
-- **Upload:** `POST https://api.muapi.ai/api/v1/upload_file`
+```python
+from minimax_h3_api import MiniMaxH3API
 
-Authentication is a single `x-api-key` header — no session tokens required.
+api = MiniMaxH3API()
 
----
+task = api.text_to_video(
+    "A cinematic tracking shot of a silver sports car driving through a rain-soaked city at night"
+)
 
-## Requirements
+result = api.wait_for_completion(task["request_id"])
+print(result["outputs"][0])
+```
 
-- Python ≥ 3.8
-- `requests` ≥ 2.28 · `Pillow` ≥ 9.0 · `numpy` ≥ 1.23 · `torch` ≥ 2.0
+## Workflows
 
----
+### Text to video
 
-## Want More Models?
+```python
+task = api.text_to_video(
+    prompt="A lone astronaut walking through a field of bioluminescent flowers, slow camera dolly in"
+)
+```
 
-This repo is focused on Midjourney only. If you need access to **100+ models** — Seedance, Kling, Veo3, Flux, HiDream, GPT-image, Imagen4, Wan, lipsync, audio, image enhancement and more — check out the full MuAPI ComfyUI node pack:
+### Image to video
 
-**[SamurAIGPT/muapi-comfyui](https://github.com/SamurAIGPT/muapi-comfyui)** — ComfyUI nodes for every muapi.ai model in one place.
+```python
+task = api.image_to_video(
+    prompt="The camera slowly pushes in as a warm breeze moves through the subject's hair",
+    image_url="https://example.com/source-image.jpg",
+)
+```
 
----
+### First and last frame
+
+```python
+task = api.first_last_frame(
+    prompt="A smooth orbit around the subject as daylight shifts into a cinematic sunset",
+    first_frame_image="https://example.com/first-frame.jpg",
+    last_frame_image="https://example.com/last-frame.jpg",
+)
+```
+
+## API endpoints
+
+| Workflow | Endpoint |
+| --- | --- |
+| Text to Video | `POST /api/v1/minimax-h3-text-to-video` |
+| Image to Video | `POST /api/v1/minimax-h3-image-to-video` |
+| First & Last Frame | `POST /api/v1/minimax-h3-first-last-frame` |
+| Poll task | `GET /api/v1/predictions/{request_id}/result` |
+
+See the full [MiniMax H3 API guide](https://muapi.ai/minimax-h3?utm_source=github&utm_medium=readme&utm_campaign=minimax-h3-api) and [Muapi documentation](https://docs.muapi.ai).
 
 ## License
 
-MIT © 2026
+MIT
