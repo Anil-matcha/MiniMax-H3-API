@@ -6,6 +6,9 @@
 
 Python SDK for the **MiniMax H3 API** on [Muapi](https://muapi.ai/minimax-h3?utm_source=github&utm_medium=readme&utm_campaign=minimax-h3-api). Generate video from text, animate a still image, or create a controlled transition between first and last frames with one API key.
 
+<p align="center"><a href="https://youtu.be/C_46zmUEHnQ"><img src="https://i.ytimg.com/vi/C_46zmUEHnQ/maxresdefault.jpg" width="720"></a></p>
+<p align="center"><a href="https://youtu.be/C_46zmUEHnQ"><b>▶ Watch: How to Access MiniMax Hailuo H3 API (Step-by-Step Guide): Native 2K Video Generation with Sound</b></a></p>
+
 ## Related Projects
 
 - [Open-Generative-AI](https://github.com/Anil-matcha/Open-Generative-AI) — open-source studio and model hub for generative image and video workflows.
