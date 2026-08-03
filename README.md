@@ -11,6 +11,8 @@ Python SDK for the **MiniMax H3 API** on [Muapi](https://muapi.ai/minimax-h3?utm
 
 ## Related Projects
 
+- [MiniMax H3 text-to-video playground](https://muapi.ai/playground/minimax-h3-text-to-video) — Try the primary SDK workflow in the browser before integrating it.
+- [awesome-minimax-h3-prompts](https://github.com/Anil-matcha/awesome-minimax-h3-prompts) — Prompt gallery with runnable MuAPI examples and creator-ready video references.
 - [Open-Generative-AI](https://github.com/Anil-matcha/Open-Generative-AI) — open-source studio and model hub for generative image and video workflows.
 - [awesome-ai-video-models](https://github.com/Anil-matcha/awesome-ai-video-models) — compare leading AI video models, API access, and pricing.
 - [Seedance-2-API](https://github.com/Anil-matcha/Seedance-2-API) — Python SDK for ByteDance Seedance text-to-video and image-to-video workflows.
