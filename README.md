@@ -4,7 +4,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/)
 
-Python SDK for the **MiniMax H3 API** on [Muapi](https://muapi.ai/minimax-h3?utm_source=github&utm_medium=readme&utm_campaign=minimax-h3-api). Generate video from text, animate a still image, or create a controlled transition between first and last frames with one API key.
+Python SDK for the **MiniMax H3 API** on [Muapi](https://muapi.ai/minimax-h3?utm_source=github&utm_medium=readme&utm_campaign=minimax-h3-api). Generate video from text, animate a still image, or guide a new video with image, video, and optional audio references using one API key.
 
 <p align="center"><a href="https://youtu.be/C_46zmUEHnQ"><img src="https://i.ytimg.com/vi/C_46zmUEHnQ/maxresdefault.jpg" width="720"></a></p>
 <p align="center"><a href="https://youtu.be/C_46zmUEHnQ"><b>▶ Watch: How to Access MiniMax Hailuo H3 API (Step-by-Step Guide): Native 2K Video Generation with Sound</b></a></p>
@@ -23,7 +23,8 @@ Python SDK for the **MiniMax H3 API** on [Muapi](https://muapi.ai/minimax-h3?utm
 
 - Text-to-video generation
 - Image-to-video animation
-- First-and-last-frame video transitions
+- Reference-to-video generation with multimodal inputs
+- First-and-last-frame guidance through image-to-video
 - Submit, poll, and webhook-ready asynchronous workflow
 - Simple Python client built on `requests`
 
@@ -55,7 +56,10 @@ from minimax_h3_api import MiniMaxH3API
 api = MiniMaxH3API()
 
 task = api.text_to_video(
-    "A cinematic tracking shot of a silver sports car driving through a rain-soaked city at night"
+    "A cinematic tracking shot of a silver sports car driving through a rain-soaked city at night",
+    aspect_ratio="16:9",
+    resolution="2k",
+    duration=5,
 )
 
 result = api.wait_for_completion(task["request_id"])
@@ -78,18 +82,30 @@ task = api.text_to_video(
 task = api.image_to_video(
     prompt="The camera slowly pushes in as a warm breeze moves through the subject's hair",
     image_url="https://example.com/source-image.jpg",
+    last_image_url="https://example.com/final-frame.jpg",
+    duration=5,
 )
 ```
 
-### First and last frame
+### Reference to video
 
 ```python
-task = api.first_last_frame(
-    prompt="A smooth orbit around the subject as daylight shifts into a cinematic sunset",
-    first_frame_image="https://example.com/first-frame.jpg",
-    last_frame_image="https://example.com/last-frame.jpg",
+task = api.reference_to_video(
+    prompt="Use the references to create a cinematic product reveal with a slow camera orbit",
+    reference_images=["https://example.com/product.jpg"],
+    reference_videos=["https://example.com/motion-reference.mp4"],
+    reference_audios=["https://example.com/soundtrack.mp3"],
+    aspect_ratio="16:9",
+    resolution="2k",
+    duration=5,
 )
 ```
+
+At least one `reference_images` or `reference_videos` URL is required. Audio references are optional and cannot be used alone.
+
+### First and last frame compatibility alias
+
+Existing integrations can continue using `first_last_frame()`. It now maps to the current image-to-video endpoint with `image_url` and `last_image_url`; new code should call `image_to_video()` directly.
 
 ## API endpoints
 
@@ -97,7 +113,7 @@ task = api.first_last_frame(
 | --- | --- |
 | Text to Video | `POST /api/v1/minimax-h3-text-to-video` |
 | Image to Video | `POST /api/v1/minimax-h3-image-to-video` |
-| First & Last Frame | `POST /api/v1/minimax-h3-first-last-frame` |
+| Reference to Video | `POST /api/v1/minimax-h3-reference-to-video` |
 | Poll task | `GET /api/v1/predictions/{request_id}/result` |
 
 See the full [MiniMax H3 API guide](https://muapi.ai/minimax-h3?utm_source=github&utm_medium=readme&utm_campaign=minimax-h3-api) and [Muapi documentation](https://docs.muapi.ai).

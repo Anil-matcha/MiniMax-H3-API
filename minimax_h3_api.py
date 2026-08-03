@@ -2,7 +2,8 @@
 
 import os
 import time
-from typing import Any, Dict, Optional
+import warnings
+from typing import Any, Dict, Iterable, Optional
 
 import requests
 
@@ -17,13 +18,86 @@ class MiniMaxH3API:
         self.base_url = base_url.rstrip("/")
         self.headers = {"x-api-key": self.api_key, "Content-Type": "application/json"}
 
-    def text_to_video(self, prompt: str, webhook_url: Optional[str] = None) -> Dict[str, Any]:
+    def text_to_video(
+        self,
+        prompt: str,
+        webhook_url: Optional[str] = None,
+        *,
+        aspect_ratio: str = "16:9",
+        resolution: str = "2k",
+        duration: int = 5,
+    ) -> Dict[str, Any]:
         """Create a MiniMax H3 text-to-video task."""
-        return self._submit("minimax-h3-text-to-video", self._payload(prompt, webhook_url=webhook_url))
+        return self._submit(
+            "minimax-h3-text-to-video",
+            self._payload(
+                prompt,
+                aspect_ratio=aspect_ratio,
+                resolution=resolution,
+                duration=duration,
+                webhook_url=webhook_url,
+            ),
+        )
 
-    def image_to_video(self, prompt: str, image_url: str, webhook_url: Optional[str] = None) -> Dict[str, Any]:
+    def image_to_video(
+        self,
+        prompt: str,
+        image_url: str,
+        webhook_url: Optional[str] = None,
+        *,
+        last_image_url: Optional[str] = None,
+        resolution: str = "2k",
+        duration: int = 5,
+    ) -> Dict[str, Any]:
         """Create a MiniMax H3 image-to-video task."""
-        return self._submit("minimax-h3-image-to-video", self._payload(prompt, image_url=image_url, webhook_url=webhook_url))
+        return self._submit(
+            "minimax-h3-image-to-video",
+            self._payload(
+                prompt,
+                image_url=image_url,
+                last_image_url=last_image_url,
+                resolution=resolution,
+                duration=duration,
+                webhook_url=webhook_url,
+            ),
+        )
+
+    def reference_to_video(
+        self,
+        prompt: str,
+        reference_images: Optional[Iterable[str]] = None,
+        reference_videos: Optional[Iterable[str]] = None,
+        reference_audios: Optional[Iterable[str]] = None,
+        webhook_url: Optional[str] = None,
+        *,
+        aspect_ratio: str = "16:9",
+        resolution: str = "2k",
+        duration: int = 5,
+    ) -> Dict[str, Any]:
+        """Create a MiniMax H3 reference-to-video task.
+
+        At least one image or video reference is required. Audio references
+        are optional and cannot be used on their own.
+        """
+        images = list(reference_images or [])
+        videos = list(reference_videos or [])
+        audios = list(reference_audios or [])
+        if not images and not videos:
+            raise ValueError("Provide at least one reference image or reference video.")
+
+        return self._submit(
+            "minimax-h3-reference-to-video",
+            self._payload(
+                prompt,
+                reference_images=images,
+                reference_videos=videos,
+                reference_audios=audios,
+                aspect_ratio=aspect_ratio,
+                resolution=resolution,
+                duration=duration,
+                webhook_url=webhook_url,
+            ),
+        )
 
     def first_last_frame(
         self,
@@ -31,11 +105,28 @@ class MiniMaxH3API:
         first_frame_image: str,
         last_frame_image: str,
         webhook_url: Optional[str] = None,
+        *,
+        resolution: str = "2k",
+        duration: int = 5,
     ) -> Dict[str, Any]:
-        """Create a MiniMax H3 first-and-last-frame video task."""
-        return self._submit(
-            "minimax-h3-first-last-frame",
-            self._payload(prompt, first_frame_image=first_frame_image, last_frame_image=last_frame_image, webhook_url=webhook_url),
+        """Create a first/last-frame task through image-to-video.
+
+        This compatibility method replaces the removed
+        ``minimax-h3-first-last-frame`` endpoint. New code should call
+        :meth:`image_to_video` with ``last_image_url`` directly.
+        """
+        warnings.warn(
+            "first_last_frame() is deprecated; use image_to_video(..., last_image_url=...) instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+        return self.image_to_video(
+            prompt,
+            first_frame_image,
+            webhook_url=webhook_url,
+            last_image_url=last_frame_image,
+            resolution=resolution,
+            duration=duration,
         )
 
     def get_result(self, request_id: str) -> Dict[str, Any]:
@@ -44,12 +135,12 @@ class MiniMaxH3API:
         response.raise_for_status()
         return response.json()
 
-    def wait_for_completion(self, request_id: str, poll_interval: int = 5, timeout: int = 600) -> Dict[str, Any]:
+    def wait_for_completion(self, request_id: str, poll_interval: float = 5, timeout: float = 600) -> Dict[str, Any]:
         """Poll a task until it succeeds, fails, or times out."""
         deadline = time.monotonic() + timeout
         while time.monotonic() < deadline:
             result = self.get_result(request_id)
-            if result.get("status") in {"completed", "success", "failed"}:
+            if result.get("status") in {"completed", "success", "failed", "cancelled"}:
                 return result
             time.sleep(poll_interval)
         raise TimeoutError(f"MiniMax H3 task {request_id} did not complete within {timeout} seconds.")
@@ -60,7 +151,7 @@ class MiniMaxH3API:
         return response.json()
 
     @staticmethod
-    def _payload(prompt: str, **kwargs: Optional[str]) -> Dict[str, Any]:
+    def _payload(prompt: str, **kwargs: Any) -> Dict[str, Any]:
         payload: Dict[str, Any] = {"prompt": prompt}
         payload.update({key: value for key, value in kwargs.items() if value is not None})
         return payload
