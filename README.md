@@ -20,7 +20,7 @@ Python SDK for the **MiniMax H3 API** on [Muapi](https://muapi.ai/minimax-h3?utm
 - [Flux-3-Dev-API](https://github.com/Anil-matcha/Flux-3-Dev-API) — unified image and video SDK for the FLUX 3 family.
 - [minimax-music-3-api](https://github.com/SamurAIGPT/minimax-music-3-api) — Python SDK for MiniMax's Music 3.0 text-to-music model, same vendor family.
 - [awesome-minimax-music-3-prompts](https://github.com/Anil-matcha/awesome-minimax-music-3-prompts) — Prompt gallery for MiniMax Music 3.0.
-- [Generative-Media-Skills](https://github.com/SamurAIGPT/Generative-Media-Skills) — agent-ready skills for building generative-media pipelines.
+- [muapi-skills](https://github.com/SamurAIGPT/muapi-skills) — agent-ready skills for building generative-media pipelines.
 - [muapi-cli](https://github.com/SamurAIGPT/muapi-cli) — CLI and MCP access to Muapi generation tasks.
 
 ## Features
