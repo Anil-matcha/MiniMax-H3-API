@@ -12,6 +12,7 @@ Python SDK for the **MiniMax H3 API** on [Muapi](https://muapi.ai/minimax-h3?utm
 ## Related Projects
 
 - [MiniMax H3 text-to-video playground](https://muapi.ai/playground/minimax-h3-text-to-video) — Try the primary SDK workflow in the browser before integrating it.
+- [MiniMax-H3-Spicy-API](https://github.com/Anil-matcha/MiniMax-H3-Spicy-API) — compare the eight H3, H3 Max and H3 Max Turbo Spicy (relaxed-moderation) video endpoints with schemas, pricing and examples.
 - [awesome-minimax-h3-prompts](https://github.com/Anil-matcha/awesome-minimax-h3-prompts) — Prompt gallery with runnable MuAPI examples and creator-ready video references.
 - [Open-Generative-AI](https://github.com/Anil-matcha/Open-Generative-AI) — open-source studio and model hub for generative image and video workflows.
 - [awesome-ai-video-models](https://github.com/Anil-matcha/awesome-ai-video-models) — compare leading AI video models, API access, and pricing.
