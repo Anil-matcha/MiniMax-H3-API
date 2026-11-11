@@ -1,10 +1,10 @@
-# MiniMax H3 API: Python SDK for AI Video Generation
+# MiniMax H3 API: Python SDK and MiniMax H3 Image API
 
 [![Powered by MuAPI](https://img.shields.io/badge/Powered%20by-MuAPI-6366f1?style=flat-square)](https://muapi.ai/minimax-h3?utm_source=github&utm_medium=badge&utm_campaign=minimax-h3-api)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/)
 
-Python SDK for the **MiniMax H3 API** on [Muapi](https://muapi.ai/minimax-h3?utm_source=github&utm_medium=readme&utm_campaign=minimax-h3-api). Generate video from text, animate a still image, or guide a new video with image, video, and optional audio references using one API key.
+Python SDK for the **MiniMax H3 API** on [Muapi](https://muapi.ai/minimax-h3?utm_source=github&utm_medium=readme&utm_campaign=minimax-h3-api), with a REST example for the **MiniMax H3 Image API**. Generate video from text, animate a still image, guide a video with multimodal references, or create high-resolution images from text with one Muapi API key.
 
 <p align="center"><a href="https://youtu.be/C_46zmUEHnQ"><img src="https://i.ytimg.com/vi/C_46zmUEHnQ/maxresdefault.jpg" width="720"></a></p>
 <p align="center"><a href="https://youtu.be/C_46zmUEHnQ"><b>▶ Watch: How to Access MiniMax Hailuo H3 API (Step-by-Step Guide): Native 2K Video Generation with Sound</b></a></p>
@@ -30,8 +30,31 @@ Python SDK for the **MiniMax H3 API** on [Muapi](https://muapi.ai/minimax-h3?utm
 - Image-to-video animation
 - Reference-to-video generation with multimodal inputs
 - First-and-last-frame guidance through image-to-video
+- MiniMax H3 Image API text-to-image generation through the Muapi REST API
 - Submit, poll, and webhook-ready asynchronous workflow
 - Simple Python client built on `requests`
+
+## MiniMax H3 Image API (Text to Image)
+
+The **MiniMax H3 Image API** creates images from text prompts with built-in prompt enhancement. The standard text-to-image endpoint supports 13 aspect ratios, 1K, 2K, or 4K resolution, and PNG, JPG, or WebP output. This repository's Python client wraps the H3 video workflows; call the image endpoint with the same Muapi API key using the REST API:
+
+```bash
+curl -X POST https://api.muapi.ai/api/v1/minimax-h3-image-text-to-image \
+  -H "x-api-key: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"prompt":"A frosted glass serum bottle on wet travertine stone, soft morning light","aspect_ratio":"4:5","resolution":"2K","output_format":"png"}'
+
+# Response: {"request_id":"REQUEST_ID"}
+```
+
+Image generation is asynchronous. Poll the request with the standard Muapi result endpoint until it completes, then read the generated image URL from the response:
+
+```bash
+curl https://api.muapi.ai/api/v1/predictions/REQUEST_ID/result \
+  -H "x-api-key: YOUR_API_KEY"
+```
+
+See the [MiniMax H3 Image API guide](https://muapi.ai/minimax-h3-image?utm_source=github&utm_medium=readme&utm_campaign=minimax-h3-api) for the text-to-image and image-edit workflows.
 
 ## Installation
 
@@ -119,6 +142,7 @@ Existing integrations can continue using `first_last_frame()`. It now maps to th
 | Text to Video | `POST /api/v1/minimax-h3-text-to-video` |
 | Image to Video | `POST /api/v1/minimax-h3-image-to-video` |
 | Reference to Video | `POST /api/v1/minimax-h3-reference-to-video` |
+| MiniMax H3 Image text-to-image | `POST /api/v1/minimax-h3-image-text-to-image` |
 | Poll task | `GET /api/v1/predictions/{request_id}/result` |
 
 See the full [MiniMax H3 API guide](https://muapi.ai/minimax-h3?utm_source=github&utm_medium=readme&utm_campaign=minimax-h3-api) and [Muapi documentation](https://docs.muapi.ai).
